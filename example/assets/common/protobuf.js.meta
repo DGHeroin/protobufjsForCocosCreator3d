@@ -1,0 +1,18 @@
+{
+  "ver": "2.0.14",
+  "importer": "javascript",
+  "imported": true,
+  "uuid": "9f7d1275-1690-4e65-bc0a-2f94ce13d0ca",
+  "files": [
+    ".js"
+  ],
+  "subMetas": {},
+  "userData": {
+    "importAsPlugin": true,
+    "isPlugin": true,
+    "loadPluginInWeb": true,
+    "loadPluginInNative": true,
+    "loadPluginInEditor": false,
+    "moduleId": "project:///assets/common/protobuf.js"
+  }
+}
