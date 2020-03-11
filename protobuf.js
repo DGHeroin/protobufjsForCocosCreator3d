@@ -5279,6 +5279,12 @@ function SYNC() {} // eslint-disable-line no-empty-function
  * @returns {undefined}
  */
 Root.prototype.load = function load(filename, options, callback) {
+    var customPBSource = null;
+    if (typeof filename === "function") {
+        var obj = filename();
+        filename = obj.filename;
+        customPBSource = obj.content;
+    }
     if (typeof options === "function") {
         callback = options;
         options = undefined;
@@ -5371,22 +5377,28 @@ Root.prototype.load = function load(filename, options, callback) {
             }
             process(filename, source);
         } else {
-            ++queued;
-            util.fetch(filename, function(err, source) {
-                --queued;
-                /* istanbul ignore if */
-                if (!callback)
-                    return; // terminated meanwhile
-                if (err) {
-                    /* istanbul ignore else */
-                    if (!weak)
-                        finish(err);
-                    else if (!queued) // can't be covered reliably
-                        finish(null, self);
-                    return;
-                }
+            if (customPBSource != null) {
+                // console.log("I'm good boy", filename, customPBSource);
+                source = customPBSource;
                 process(filename, source);
-            });
+            } else {
+                ++queued;
+                util.fetch(filename, function(err, source) {
+                    --queued;
+                    /* istanbul ignore if */
+                    if (!callback)
+                        return; // terminated meanwhile
+                    if (err) {
+                        /* istanbul ignore else */
+                        if (!weak)
+                            finish(err);
+                        else if (!queued) // can't be covered reliably
+                            finish(null, self);
+                        return;
+                    }
+                    process(filename, source);
+                });
+            }
         }
     }
     var queued = 0;
